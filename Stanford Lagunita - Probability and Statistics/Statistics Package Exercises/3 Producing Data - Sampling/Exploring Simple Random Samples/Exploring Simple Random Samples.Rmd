@@ -1,0 +1,220 @@
+---
+title: 'Statistics Package Exercise: Exploring Simple Random Samples'
+author: "Sam Matuba"
+date: "9/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+---
+Learning Objective: Identify the sampling method used in a study and discuss its implications and potential limitations.
+---
+
+## Background
+Population: all (1129) students with different majors (business, social sciences, or natural sciences) at a large university taking introductory statistics courses
+
+Variables: 
+
+- **Course**: natural science, social science, or business
+
+- **Handed**: handedness (right-handed vs left-handed)
+
+- **Sex**: male or female
+
+- **Verbal**: SAT Verbal scores up to 800
+
+- **Age**: in yers
+
+Methods:
+- Take a random sample and use sample summaries as estimates for population summaries. Would the sample estimates provide unbiased estimates for the population value? 
+- Sample 192 business students and intuit if they would be a representative sample.
+
+Notes:
+- all students have options in terms when to take the course
+- women, on the whole, do better than men on the verbal portion of SAT
+- business is a major that tends to interest males more than females
+
+## Goals
+A. Verify the distributions of the variables for the sample and the population
+
+B. Intuit whether the distributions of each variable in the sample of business students would be rougly similar to the population
+
+C. Check B.
+
+
+## R
+
+Load dataset
+
+``` {r}
+load(file="student_survey.RData")
+```
+
+```{r}
+head(population)
+```
+
+Take a simple random sample of data. For consistency, the sample will have the same size (192) as the nonrandom sample of business statistics students.
+
+```{r}
+random_sample = population[sample(length(population$Course),192),]; head(random_sample)
+```
+
+### Part A
+
+---
+Determine whether the four variables' behavior for the random sample is comparable to the behavior for the population
+---
+
+Create bar charts or pie charts and compare the distribution of the variables in the sample and in the population.
+
+#### Handedness
+
+``` {r}
+random_sample_percent = 100*prop.table(table(random_sample$Handed));random_sample_percent
+```
+
+``` {r}
+pop_percent = 100*prop.table(table(population$Handed));pop_percent
+
+```
+
+``` {r}
+barplot(rbind(pop_percent,random_sample_percent), beside=T, col=c(0,1),legend.text=T,xlab="Handedness",ylab="Percent in Group",args.legend=list(x="topleft"))
+```
+
+``` {r}
+par(mfrow=c(1,2)); pie(pop_percent,labels=paste(c("left=","right="),round(pop_percent,0),"%"),main="Population"); pie(random_sample_percent,labels=paste(c("left=","right="),round(random_sample_percent,0),"%"),main="Random Sample")
+```
+
+In comparing the two charts, we see that the distribution of the handedness for sample comes within 5% of the distribution for the population.
+
+#### Sex
+
+``` {r}
+random_sample_percent = 100*summary(random_sample$Sex)/length(random_sample$Sex);random_sample_percent; 
+pop_percent = 100*summary(population$Sex)/length(population $Sex);pop_percent; 
+par(mfrow=c(1,2)); 
+pie(pop_percent,labels=paste(c("female=","male="),round(pop_percent,0),"%"),main="Population"); pie(random_sample_percent,labels=paste(c("female=","male="),round(random_sample_percent,0),"%"),main="Random Sample")
+
+```
+
+In the Sex variable, the distribution of the sample also falls within 5% to that of the population. 
+
+#### SAT Verbal Scores
+
+``` {r}
+summary(population$Verbal)
+
+```
+
+``` {r}
+summary(random_sample$Verbal)
+```
+
+``` {r}
+par(mfrow=c(1,2));
+hist(population$Verbal,main="Population",xlab="SAT Verbal Score",xlim=range(300,800));
+hist(random_sample$Verbal,main="Random Sample",xlab="SAT Verbal Score",xlim=range(300,800));
+
+```
+
+Since SAT scores tend to follow a normal (symmetric) distribution, we can compare the mean of the sample to that of the population. 
+
+``` {r}
+random_sample_SAT_mean = 595
+pop_SAT_mean =  588.8
+percent_difference = 100*(random_sample_SAT_mean - pop_SAT_mean)/(pop_SAT_mean); percent_difference
+```
+
+The mean of the random sample is within 1% of the mean of the population.
+
+#### Age
+``` {r}
+summary(population$Age)
+
+```
+
+``` {r}
+summary(random_sample$Age)
+```
+``` {r}
+par(mfrow=c(1,2));
+hist(population$Age,main="Population",xlab="Age",xlim=range(17,75));
+hist(random_sample$Age,main="Random Sample",xlab="Age",xlim=range(17,75));
+```
+
+Since Age tends to follow a right-skewed distribution, the medians could be compared. It turns out, that the median is 19.67 for both sample and population.
+
+#### Results Summary
+The distributions of the variables for the random sample and the population were compared. In the categorical variables Handedness and Sex, the  distributions, visualized in pie graphs, are within 5% for the sample and the population. For the numerical variable Verbal, the distributions are found close to normal and thus the means were compared and were determined to be within 1% for the random sample and the population. For the numerical variable Age, the distribution is right-skewed and thus the median is the main statistic used for comparison, which was then found similar at value of 19.67.  Because the statistics are comparable across all variables for the random sample and population, we can conclude that there is no bias and that the random sample is a representative sample for the population.
+
+### Part B
+
+---
+Intuit whether the distributions of each of the four variables in the (nonrandom) sample of business students would be roughly the same as those for the population, or whether there is a reason to expect any of them to be biased. For each of the variables—Handed, Sex, Verbal, and Age—decide whether or not you believe the sample of business statistics students should be fairly representative of the larger population of all students in introductory statistics courses.
+---
+
+For the nonrandom sample of 192 business students, we can outright expect that the distribution of the Sex variable will not be representative of the population since business as a major tend to interest more males than females. Consequently, the distribution of Verbal SAT score will also be not representative since there are less number of females than males in the sample but females in general get higher scores than males. As for Handedness and Age, we can intuit that the type of major should not substantially affect the distribution compared to that of the population. 
+
+### Part C
+
+---
+How representative is the (nonrandom) sample of students in the business statistics course, in actuality? In order to answer this question, we will need to extract this group from the population.
+---
+
+``` {r}
+business = population[population$Course=="Business",];business
+```
+
+#### Handedness
+``` {r}
+business_percent = 100*summary(business$Handed)/length(business$Handed);business_percent; 
+pop_percent = 100*prop.table(table(population$Handed));pop_percent
+par(mfrow=c(1,2)); 
+pie(pop_percent,labels=paste(c("left=","right="),round(pop_percent,0),"%"),main="Population"); pie(business_percent,labels=paste(c("left=","right="),round(business_percent,0),"%"),main="Business")
+```
+
+In comparing the distribution for Handed between population and business sample, the percentages are still within 5%.
+
+#### Sex
+``` {r}
+business_percent = 100*summary(business$Sex)/length(business$Sex);business_percent; 
+pop_percent = 100*summary(population$Sex)/length(population $Sex);pop_percent; 
+par(mfrow=c(1,2)); 
+pie(pop_percent,labels=paste(c("female=","male="),round(pop_percent,0),"%"),main="Population"); pie(business_percent,labels=paste(c("female=","male="),round(business_percent,0),"%"),main="Business")
+```
+
+In comparing the distribution for Sex between population and business sample, the percentage of females is substantially less in the business sample than that of the population sample by ten percent. This is an expected from the background of the problem.  
+
+#### Verbal
+``` {r}
+summary(business$Verbal)
+```
+``` {r}
+summary(population$Verbal)
+```
+
+``` {r}
+100*abs((mean(business$Verbal,na.rm=TRUE) - mean(population$Verbal,na.rm=TRUE))/mean(population$Verbal,na.rm=TRUE))
+```
+
+We determined previously that the SAT Verbal scores tend to have a normal (symettric) distribution. By comparing the means of 574.6 and 588.8 in the business sample and population, respectively, there is only a 2.4% difference.
+
+#### Age
+``` {r}
+summary(business$Age)
+```
+
+``` {r}
+summary(population$Age)
+```
+
+For the numerical variable Age, we previously found that the distribution tends to be right-skewed. Hence, the medians are compared. With medians 19.50 and 19.67, we can say that there is no bias for this variable in the business sample.
+
+#### Summary
+In comparing the distributions across the variables between the population and the business sample, we found that that the variables Handed, Verbal, and Age have unbiased distribution. The Sex variable, however, has a substantially different distribution, with males having the greater number than females. 
+
+Going back to the intuition, it was correct that the Sex variables is expected to be biased. For the Verbal scores, however, it turned out to not make a significant difference. The variables Age and Handed turned out to be unbiased as expected.

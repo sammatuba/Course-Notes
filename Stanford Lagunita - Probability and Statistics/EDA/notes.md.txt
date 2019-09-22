@@ -1,0 +1,33 @@
+## Measures of Spread
+### range
+distance betwen the min and max; range = Max - min 
+### interquartile range (IQR)
+- measures the variability of a distribution by giving the range covered by the MIDDLE 50% of the data
+- min -> Q1 -> M -> Q3 -> Max; IQR = Q3 - Q1
+- using IQR to detect outliers
+    - The 1.5(IQR) Criterion for Outliers: below Q1 - 1.5(IQR) or above Q3 + 1.5(IQR) 
+- The IQR should be used as a measure of spread of a distribution only when the median is used as a measure of center.
+
+### Notes: Understanding Outliers
+1. Even though it is an extreme value, if an outlier can be understood to have been produced by **essentially the same sort of physical or biological process** as the rest of the data, and if such extreme values are expected to **eventually occur again**, then such an outlier indicates something important and interesting about the process you're investigating, and it **should be kept** in the data.
+2. If an outlier can be explained to have been produced under fundamentally **different** conditions from the rest of the data (or by a fundamentally different process), such an outlier **can be removed** from the data if your goal is to investigate only the process that produced the rest of the data.
+3. An outlier might indicate a **mistake** in the data (like a typo, or a measuring error), in which case it **should be corrected if possible or else removed** from the data before calculating summary statistics or making inferences from the data (and the reason for the mistake should be investigated).
+
+### Boxplot: The Five Number Summary
+- the combination of all numbers (min, Q1, M, Q3, Max) is called the five number summary. it provides a complete numerical description of a distribution. The median describes the center, and the extremes (which give the range) and the quartiles (which give the IQR) describe the spread.
+- The boxplot graphically represents the distribution of a quantitative variable by visually displaying the five number summary and any observation that was classified as a suspected outlier using the 1.5 (IQR) criterion.
+- Boxplots are most useful when presented side-by-side to compare and contrast distributions from two or more groups.
+
+### Standard Deviation: Introduction
+- the idea behind standard deviation is to quantify the spread of a distribution by measuring the average distance of the observations from their mean
+- standard deviation rule: 68% of observations fall within 1 standard deviation of the mean, 95% of observations within 2 sd, 99.7% of observations within 3 sd
+### Choosing Numerical Summaries
+Use  (the mean) and the standard deviation as measures of center and spread only for reasonably symmetric distributions with no outliers.
+
+Use the five-number summary (which gives the median, IQR and range) for all other cases.
+
+# EDA: Examining Relationships
+## Exploring Two Variables: Explanatory and Response
+
+- the explanatory (independent) variable, X, claims to explaion, predict, or affect the response; and
+- the response (dependent) variable, Y, is the outcomne of the study

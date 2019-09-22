@@ -1,0 +1,90 @@
+---
+title: "Creating Similar Treatment Groups"
+author: "Sam Matuba"
+date: "9/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background
+A local internet service provider (ISP) created two new versions of its software, with alternative ways of implementing a new feature. To find the product that would lead to the highest satisfaction among customers, the ISP conducted an experiment comparing users' preferences for the two new versions versus the existing software.
+
+The ISP ideally wants to find out which of the three software products causes the highest user satisfaction. It has identified three major potential lurking variables that might affect user satisfaction—gender, age, and hours per week of computer use.
+
+## Dataset
+- The population of interest to the ISP is the adults in a hypothetical city.
+- Variables:
+  - **age**: in years
+  - **gender**: female or male
+  - **comp**: hours per week of computer use
+  
+## Objectives
+1. create a simple random sample as the basis for the experimental study of the population
+2. use randomization to assign individuals to treatment groups
+3. verify that randomization prevented the three treatment groups from being different with respect to the most obvious lurking variables
+
+## R
+
+The dataset contains the values of the three possible lurking variables.
+
+*load dataset*
+```{r}
+load(file="computers.RData")
+```
+
+*variables*
+```{r}
+str(computers)
+```
+
+*view dataset*
+```{r}
+head(computers)
+```
+
+*quick statistical summary*
+```{r}
+summary(computers)
+```
+
+1. *choose a simple random sample (SRS) of 450 people for the subjects in the study*
+```{r}
+random_sample = computers[sample(length(computers$age),450),]
+summary(random_sample)
+```
+
+2. *randomly assign the 450 subjects to one of three treatments denoted by versions "1", "2", and "3"*
+
+```{r}
+group = sample(1:3,450,replace=T);
+random_sample = cbind(random_sample,group);
+head(random_sample)
+```
+
+3. *The distributions of the variables in the three groups are examined*
+
+*Age*
+```{r}
+boxplot(random_sample$age~random_sample$group, xlab="Group", ylab="Age (years)");
+```
+
+*Gender*
+```{r}
+two_way_table = table(random_sample$group,random_sample$gender)
+prop.table(two_way_table,1)*100
+```
+*Comp*
+```{r}
+boxplot(random_sample$comp~random_sample$group, xlab="Group", ylab="Comp (hours per week)")
+```
+
+## Analysis
+Based on the box plots created, the distributions of ages and hours per week of computer use are similar across the three treatment groups. Similarly, the tabless of conditional percents suggests that the distributions of gender is also similar across the groups. 
+
+## Conclusion
+In this exercise, 450 samples are taken from a population of 20783 adults using simple random sampling (SRS). The samples are then randomly assigned the  to three different treatments, which are the three versions of the software. Finally, the possible effects of the lurking variables age, gender, and hours per week of computer use are eliminated by examining and confirming that their distributions are similar across all groups. Therefore, any difference in results across the treatment groups will be due to the differences in the three software versions, rather than age, gender, and hours per week of computer use. 
+
+
